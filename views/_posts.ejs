@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="<%= assetPath('css/_posts.css') %>">
+
+<div class="posts-display" id="post-<%= p.id %>">
+    <h3>
+        <%= p.user.name %>
+    </h3>
+    <p class="post-content">
+    
+        <%= p.content %>
+    </p>
+    <div class='post-btns'>
+       
+        <% if(locals.user) {%>
+            <a href="/likes/toggle/?id=<%= p.id %>&type=Post" class="like-btn-link" data-likes="<%= p.likes.length %>">
+            <button class='like-btn' ><span id='like-count-<%= p.id %>-Post'><%=p.likes.length%></span> &nbsp <i class="fas fa-heart"></i></button>
+            </a>
+        <% }else{ %>
+            <button class='like-btn' ><span id='like-count-<%= p.id %>-Post'><%=p.likes.length%></span> <i class="fas fa-heart"></i></button>
+        <%  } %>
+
+        <button class='comments-btn' post-id="<%= p.id %>">Comments</button>
+
+        <% if(locals.user && (locals.user.id == p.user.id)) {%>
+            <a href="/posts/destroy/<%= p.id %>" class="delete-post-btn-link">
+            <button class='delete-post-btn' >Delete</button>
+            </a>
+        <% } %>
+        </div>
+
+        <div class="post-comments hidden" id="comment-section-<%= p.id %>" >
+            <% if(locals.user){ %>
+                <form action="/comments/create" method="POST" class="comment-form comment-form-preloaded" id="post-<%= p.id %>-comment-form">
+                    <input type="text" name="content" placeholder="Add a comment !" required>
+        
+                    <!-- we are not taking this as input , each comment will automiatcially link to its post -->
+                    <input type="hidden" name="post" value="<%= p._id %>"> 
+                    <input type="submit" value="POST" class="post-comment-btn">
+                </form>
+            <% } %> 
+        
+            <div class="post-comments-list " id="post-comments-wrapper-<%= p.id %>">
+        
+                <ul id="post-comments-<%= p.id %>">
+        
+                    <% for(comment of p.comments) {%>
+                        
+                        <%- include('_comments') -%>
+
+                    <% } %>
+        
+                </ul>
+        
+            </div>
+        </div>
+
+</div>
+
